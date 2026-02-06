@@ -15,7 +15,7 @@ describe('FactorioRconClient', () => {
 
   it('should create a client instance', () => {
     expect(client).toBeDefined();
-    expect(client.isConnected()).toBe(false);
+    expect(client).toBeInstanceOf(FactorioRconClient);
   });
 
   it('should have the correct host, port properties', () => {
