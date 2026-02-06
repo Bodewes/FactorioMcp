@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "factorio": {
+      "type": "stdio",
       "command": "node",
       "args": ["dist/index.js"],
       "cwd": "${workspaceFolder}",
