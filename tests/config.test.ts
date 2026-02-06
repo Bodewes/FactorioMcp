@@ -9,7 +9,7 @@ describe('Configuration', () => {
   });
 
   it('should have valid RCON configuration', () => {
-    expect(config.rcon.host).toBeBefined();
+    expect(config.rcon.host).toBeDefined();
     expect(config.rcon.port).toBeGreaterThan(0);
     expect(config.rcon.password).toBeDefined();
   });

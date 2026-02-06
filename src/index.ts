@@ -1,9 +1,9 @@
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
-import { Server } from '@modelcontextprotocol/sdk/server/index';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types';
-import { Logger } from './utils/logger';
-import { config } from './utils/config';
-import { FactorioRconClient } from './rcon/client';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { Logger } from './utils/logger.js';
+import { config } from './utils/config.js';
+import { FactorioRconClient } from './rcon/client.js';
 
 const logger = new Logger('factorio-mcp');
 
@@ -29,7 +29,9 @@ async function main(): Promise<void> {
         version: '0.1.0',
       },
       {
-        capabilities: {},
+        capabilities: {
+          tools: {},
+        },
       }
     );
 

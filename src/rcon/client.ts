@@ -1,10 +1,11 @@
 // @ts-ignore - rcon-srcds doesn't have TypeScript declarations
-import { Rcon } from 'rcon-srcds';
-import { Logger } from '../utils/logger';
-import { ConnectionError, CommandError } from '../utils/errors';
+import pkg from 'rcon-srcds';
+const { Rcon } = pkg;
+import { Logger } from '../utils/logger.js';
+import { ConnectionError, CommandError } from '../utils/errors.js';
 
 export class FactorioRconClient {
-  private rcon: Rcon | null = null;
+  private rcon: InstanceType<typeof Rcon> | null = null;
   private host: string;
   private port: number;
   private password: string;
