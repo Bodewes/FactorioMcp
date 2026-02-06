@@ -334,10 +334,21 @@ LOG_LEVEL=info
 
 ## Future Enhancements (Post v1.0)
 
+### Phase 9: Companion Mod (Optional Enhancement)
+- [ ] Create Factorio companion mod for enhanced data access
+- [ ] Implement custom MCP-optimized commands in Lua
+- [ ] Add JSON-formatted output for structured data
+- [ ] Real-time event monitoring hooks
+- [ ] Advanced logistics network queries
+- [ ] Production statistics aggregation
+- [ ] Blueprint management endpoints
+- [ ] Fallback to pure RCON when mod not installed
+
+### Additional Features
 1. **Web Dashboard**: Real-time monitoring interface
 2. **Event Streaming**: Real-time game events via WebSocket
 3. **Blueprint Library**: Manage & share blueprints
-4. **Mod Support**: Integration with popular mods
+4. **Popular Mod Integration**: Support for Space Exploration, Krastorio2, etc.
 5. **Multi-Server**: Support multiple Factorio instances
 6. **GraphQL API**: Alternative to RCON for complex queries
 7. **AI Assistant Tools**: Specialized tools for AI-driven gameplay
