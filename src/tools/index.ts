@@ -6,6 +6,7 @@ import { runLuaTool } from './run-lua.js';
 import { getEvolutionTool } from './get-evolution.js';
 import { getResearchTool } from './get-research.js';
 import { getProductionTool } from './get-production.js';
+import { getFactorioDocsTool } from './get-factorio-docs.js';
 
 export const allTools: FactorioTool[] = [
   executeCommandTool,
@@ -15,6 +16,7 @@ export const allTools: FactorioTool[] = [
   getEvolutionTool,
   getResearchTool,
   getProductionTool,
+  getFactorioDocsTool,
 ];
 
 export * from './types.js';
