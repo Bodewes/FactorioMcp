@@ -1,6 +1,6 @@
-import { Logger } from '../utils/logger.js';
-import { ConnectionError, CommandError } from '../utils/errors.js';
 import { Socket } from 'net';
+import { Logger } from '../utils/logger.js';
+import { RconError } from '../utils/errors.js';
 
 enum PacketType {
   RESPONSE_VALUE = 0,
@@ -20,12 +20,12 @@ export class FactorioRconClient {
   private logger: Logger;
   private packetId = 0;
   private connected = false;
-  private timeout = 10000;
 
   constructor(
     private host: string,
     private port: number,
-    private password: string
+    private password: string,
+    private timeout: number = 5000
   ) {
     this.logger = new Logger('FactorioRconClient');
   }
@@ -41,33 +41,30 @@ export class FactorioRconClient {
 
       this.socket.once('error', reject);
       this.socket.once('timeout', () => {
-        reject(new ConnectionError('Connection timeout'));
+        reject(new RconError('Connection timeout'));
       });
 
       this.socket.connect(this.port, this.host, async () => {
         this.socket?.removeListener('error', reject);
         
         try {
-          this.logger.info('Authenticating to RCON server', {
-            host: this.host,
-            port: this.port,
-          });
-          
+          // Send authentication
           this.packetId = 0;
           await this.sendPacket(this.packetId, PacketType.AUTH, this.password);
           
+          // Receive auth response
           const response = await this.receivePacket();
           
           if (response.type !== PacketType.AUTH_RESPONSE) {
-            throw new ConnectionError('Invalid auth response type');
+            throw new RconError('Invalid auth response type');
           }
           
           if (response.id === -1) {
-            throw new ConnectionError('Invalid password');
+            throw new RconError('Invalid password');
           }
           
           if (response.id !== this.packetId) {
-            throw new ConnectionError('Invalid response ID');
+            throw new RconError('Invalid response ID');
           }
           
           this.connected = true;
@@ -87,10 +84,9 @@ export class FactorioRconClient {
       this.socket = null;
     }
     this.connected = false;
-    this.logger.info('Disconnected from RCON server');
   }
 
-  async execute(command: string): Promise<string> {
+  async execute(command: string): Promise<string | null> {
     if (!this.connected || !this.socket) {
       await this.connect();
     }
@@ -100,61 +96,54 @@ export class FactorioRconClient {
       this.packetId = 0;
     }
 
-    try {
-      this.logger.debug('Executing command', { command, id });
-      await this.sendPacket(id, PacketType.EXECCOMMAND, command);
-      const response = await this.receivePacket();
+    await this.sendPacket(id, PacketType.EXECCOMMAND, command);
+    const response = await this.receivePacket();
 
-      if (response.id !== id) {
-        throw new CommandError(`Response ID mismatch: expected ${id}, got ${response.id}`);
-      }
-
-      if (response.type !== PacketType.RESPONSE_VALUE) {
-        throw new CommandError(`Invalid response type: ${response.type}`);
-      }
-
-      this.logger.debug('Command executed successfully', { command, response: response.body });
-      return response.body ? response.body.trim() : '';
-    } catch (error) {
-      this.logger.error('Command execution failed', {
-        command,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      throw new CommandError(
-        `Failed to execute command: ${error instanceof Error ? error.message : String(error)}`
-      );
+    if (response.id !== id) {
+      throw new RconError(`Response ID mismatch: expected ${id}, got ${response.id}`);
     }
+
+    if (response.type !== PacketType.RESPONSE_VALUE) {
+      throw new RconError(`Invalid response type: ${response.type}`);
+    }
+
+    return response.body ? response.body.trim() : null;
   }
 
   private sendPacket(id: number, type: PacketType, body: string): Promise<void> {
     if (!this.socket) {
-      throw new ConnectionError('Not connected');
+      throw new RconError('Not connected');
     }
 
     const bodyBuffer = Buffer.from(body, 'utf-8');
-    const length = 4 + 4 + bodyBuffer.length + 2;
+    const length = 4 + 4 + bodyBuffer.length + 2; // id + type + body + 2 null bytes
     
     const packet = Buffer.allocUnsafe(4 + length);
     let offset = 0;
     
+    // Packet length (excluding this field)
     packet.writeInt32LE(length, offset);
     offset += 4;
     
+    // Packet ID
     packet.writeInt32LE(id, offset);
     offset += 4;
     
+    // Packet type
     packet.writeInt32LE(type, offset);
     offset += 4;
     
+    // Body
     bodyBuffer.copy(packet, offset);
     offset += bodyBuffer.length;
     
+    // Two null bytes (one for body string terminator, one for packet terminator)
     packet.writeUInt16LE(0, offset);
 
     return new Promise((resolve, reject) => {
       this.socket!.write(packet, (err) => {
         if (err) {
-          reject(new CommandError(`Failed to send packet: ${err.message}`));
+          reject(new RconError(`Failed to send packet: ${err.message}`));
         } else {
           resolve();
         }
@@ -164,7 +153,7 @@ export class FactorioRconClient {
 
   private receivePacket(): Promise<RconMessage> {
     if (!this.socket) {
-      throw new ConnectionError('Not connected');
+      throw new RconError('Not connected');
     }
 
     return new Promise((resolve, reject) => {
@@ -175,10 +164,12 @@ export class FactorioRconClient {
       const onData = (data: Buffer) => {
         buffer = Buffer.concat([buffer, data]);
 
+        // Read packet length (first 4 bytes)
         if (expectedLength === null && buffer.length >= 4) {
           expectedLength = buffer.readInt32LE(0);
         }
 
+        // Check if we have the complete packet (4 bytes for length field + expectedLength)
         if (expectedLength !== null && buffer.length >= 4 + expectedLength) {
           cleanup();
           
@@ -186,7 +177,8 @@ export class FactorioRconClient {
             const id = buffer.readInt32LE(4);
             const type = buffer.readInt32LE(8) as PacketType;
             
-            const bodyLength = expectedLength - 10;
+            // Body is from offset 12 to end-2 (excluding two null bytes)
+            const bodyLength = expectedLength - 10; // minus id(4) + type(4) + nulls(2)
             let body: string | null = null;
             
             if (bodyLength > 0) {
@@ -195,24 +187,24 @@ export class FactorioRconClient {
             
             resolve({ id, type, body });
           } catch (error) {
-            reject(new CommandError(`Failed to parse packet: ${error instanceof Error ? error.message : String(error)}`));
+            reject(new RconError(`Failed to parse packet: ${error instanceof Error ? error.message : String(error)}`));
           }
         }
       };
 
       const onError = (error: Error) => {
         cleanup();
-        reject(new CommandError(`Socket error: ${error.message}`));
+        reject(new RconError(`Socket error: ${error.message}`));
       };
 
       const onTimeout = () => {
         cleanup();
-        reject(new CommandError('Receive timeout'));
+        reject(new RconError('Receive timeout'));
       };
 
       const onClose = () => {
         cleanup();
-        reject(new ConnectionError('Connection closed'));
+        reject(new RconError('Connection closed'));
       };
 
       const cleanup = () => {
