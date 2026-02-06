@@ -8,6 +8,7 @@ const transport = pino.transport({
     singleLine: false,
     translateTime: 'HH:MM:ss Z',
     ignore: 'pid,hostname',
+    destination: 2, // Write to stderr instead of stdout (MCP requirement)
   },
 });
 
