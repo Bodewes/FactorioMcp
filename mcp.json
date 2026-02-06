@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "factorio": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "FACTORIO_RCON_HOST": "localhost",
+        "FACTORIO_RCON_PORT": "27015",
+        "FACTORIO_RCON_PASSWORD": "test123",
+        "MCP_SERVER_NAME": "factorio-mcp",
+        "LOG_LEVEL": "info",
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}

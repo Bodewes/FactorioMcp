@@ -73,6 +73,20 @@ LOG_LEVEL=info
 
 ## 🎯 Usage
 
+### Development (Local Testing)
+
+For local development and testing, this project includes a `mcp.json` configuration:
+
+```bash
+# Build the project first
+npm run build
+
+# The mcp.json is ready to use with MCP clients
+# It references the built dist/index.js file
+```
+
+Your MCP client can now use the configuration from `mcp.json` to connect to this server.
+
 ### As Standalone Server
 
 ```bash
