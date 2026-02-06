@@ -147,19 +147,17 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 - [ ] Performance testing
 - [ ] Error scenario testing
 
-### Phase 7: Documentation & Examples (Week 5)
+### Phase 7: Documentation & Examples
 - [ ] API documentation
 - [ ] Usage examples
 - [ ] Configuration guide
 - [ ] Troubleshooting guide
-- [ ] Contributing guidelines
 
-### Phase 8: Publishing & Distribution (Week 5-6)
+### Phase 8: Publishing & Distribution
 - [ ] npm package setup
 - [ ] Version tagging
 - [ ] Release notes
 - [ ] GitHub releases
-- [ ] Community outreach
 
 ## Project Structure
 
@@ -334,16 +332,10 @@ LOG_LEVEL=info
 - Performance under load
 - Error recovery scenarios
 
-## Performance Considerations (8 tools total)
-- ✅ Modular, maintainable code structure
-- ✅ Offline mode support for non-RCON tools
-- ✅ Documentation lookup capability (Lua API & Wiki)
-- ✅ Error detection and handling
-- ✅ Factorio 2.0 compatibility
-- [ ] Comprehensive test coverage (>80%)
-- [ ] Production-ready error handling
-- [ ] Complete API documentation
-- [ ]**Async Operations**: Non-blocking command execution
+## Performance Considerations
+1. **Connection Pooling**: Reuse RCON connections
+2. **Request Batching**: Combine similar requests
+3. **Async Operations**: Non-blocking command execution
 4. **Timeout Management**: Prevent long hangs
 5. **Memory Management**: Resource cleanup
 
@@ -367,23 +359,57 @@ LOG_LEVEL=info
 - ✅ Documentation for basic usage
 
 ### Complete v1.0
-- ✅ All planned tools implemented
-- ✅ Comprehensive test coverage (>80%)
-- ✅ Production-ready error handling
-- ✅ Complete documentation
-- ✅ Published to npm
+- ✅ All planned tools implemented (8 tools total)
+- ✅ Modular, maintainable code structure
+- ✅ Offline mode support for non-RCON tools
+- ✅ Documentation lookup capability (Lua API & Wiki)
+- ✅ Error detection and handling
+- ✅ Factorio 2.0 compatibility
+- [ ] Comprehensive test coverage (>80%)
+- [ ] Production-ready error handling
+- [ ] Complete API documentation
+- [ ] Published to npm
 
 ## Future Enhancements (Post v1.0)
 
 ### Phase 9: Companion Mod (Optional Enhancement)
-- [ ] Create Factorio companion mod for enhanced data access
-- [ ] Implement custom MCP-optimized commands in Lua
-- [ ] Add JSON-formatted output for structured data
-- [ ] Real-time event monitoring hooks
-- [ ] Advanced logistics network queries
-- [ ] Production statistics aggregation
-- [ ] Blueprint management endpoints
-- [ ] Fallback to pure RCON when mod not installed
+
+**Communication Methods Evaluation:**
+
+| Method | Single Player | Setup Required | Latency | Bidirectional |
+|--------|--------------|----------------|---------|---------------|
+| **RCON** | ❌ Dedicated server only | `--rcon-port 27015 --rcon-password <pwd>` | Low | ✅ Yes |
+| **UDP** | ✅ Works everywhere | `--enable-lua-udp` | Very Low | ✅ Yes |
+| **File-based** | ✅ Works everywhere | None | High | ⚠️ Polling |
+
+**Recommended Approach: UDP Primary with Fallbacks**
+
+1. **UDP Communication** (Primary - when available):
+   - Use `helpers.send_udp(port, data)` and `helpers.recv_udp()`
+   - Real-time bidirectional communication
+   - Works in single player AND multiplayer  
+   - Requires: `factorio.exe --enable-lua-udp`
+   - Localhost only (secure by default)
+   - Structured JSON via `helpers.table_to_json()`
+
+2. **RCON** (Fallback - dedicated servers without mod):
+   - Current implementation
+   - Dedicated server only
+   - Works without mod installation
+
+3. **File-based** (Last resort - if UDP disabled):
+   - Via `script-output/` directory
+   - High latency but universally compatible
+   - No special flags required
+
+**Companion Mod Features:**
+- [ ] UDP listener on configurable port (default: 31337)
+- [ ] Structured JSON output for complex data
+- [ ] Real-time event streaming (on_built_entity, on_research_finished, etc.)
+- [ ] Optimized production/logistics queries
+- [ ] Blueprint import/export helpers
+- [ ] Auto-detection of communication method
+- [ ] Graceful fallback chain: UDP → RCON → File-based
 
 ### Additional Features
 1. **Web Dashboard**: Real-time monitoring interface
@@ -394,7 +420,6 @@ LOG_LEVEL=info
 6. **GraphQL API**: Alternative to RCON for complex queries
 7. **AI Assistant Tools**: Specialized tools for AI-driven gameplay
 
-## Resources & References
 ## Recent Updates
 
 ### February 6, 2026 - Documentation & Offline Mode
@@ -417,39 +442,16 @@ LOG_LEVEL=info
   - Updated for Factorio 2.0.67+
   - Fixed production statistics API (get_item_production_statistics method)
 
----
-
-*Document version: 1.1ication](https://modelcontextprotocol.io/)
-- [Factorio Console Commands](https://wiki.factorio.com/Console)
-- [RCON Protocol](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol)
-- [Factorio Lua API](https://lua-api.factorio.com/)
-
-### Similar Projects
-- factorio-server-manager
-- factorio-rcon-py
-- Source RCON libraries
-
-### Community
-- Factorio Discord
-- Factorio Forums
-- Reddit r/factorio
-
-## Timeline
-
-- **Week 1**: Setup & Infrastructure
-- **Week 2**: RCON + MCP Basics
-- **Week 3**: Core Tools Implementation
-- **Week 4**: Testing & Refinement
-- **Week 5**: Documentation & Polish
-- **Week 6**: Release & Community
-
-**Target Release Date**: 6 weeks from start
-
-## Contact & Maintainers
-
-TBD - Project lead to be identified
+### February 6, 2026 - Companion Mod Communication Strategy
+- ✅ Evaluated communication methods for companion mod
+- ✅ Identified UDP as optimal solution via `helpers.send_udp()`
+  - Works in single player (unlike RCON)
+  - Real-time bidirectional (unlike file-based)
+  - Requires `--enable-lua-udp` startup flag
+  - Native JSON support via `helpers.table_to_json()`
+- ✅ Designed hybrid fallback strategy: UDP → RCON → File-based
 
 ---
 
-*Document version: 1.0*  
+*Document version: 1.2*  
 *Last updated: February 6, 2026*
