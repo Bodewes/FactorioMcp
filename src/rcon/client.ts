@@ -113,8 +113,17 @@ export class FactorioRconClient {
         throw new CommandError(`Invalid response type: ${response.type}`);
       }
 
-      this.logger.debug('Command executed successfully', { command, response: response.body });
-      return response.body ? response.body.trim() : '';
+      const responseText = response.body ? response.body.trim() : '';
+      
+      // Check for Factorio error messages in the response
+      if (responseText.includes('Cannot execute command') || 
+          responseText.includes('Error:') ||
+          responseText.match(/^Error /)) {
+        throw new CommandError(`Factorio error: ${responseText}`);
+      }
+
+      this.logger.debug('Command executed successfully', { command, response: responseText });
+      return responseText;
     } catch (error) {
       this.logger.error('Command execution failed', {
         command,
