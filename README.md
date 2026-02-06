@@ -75,21 +75,24 @@ LOG_LEVEL=info
 
 ### Development (Local Testing)
 
-This project includes MCP server configurations for different clients:
+This project includes MCP server configuration for workspace integration:
 
 #### In VS Code with GitHub Copilot
 
-The `.vscode/settings.json` is already configured! Just:
+The `.vscode/mcp.json` is already configured! Just:
 
 ```bash
 # Build the project
 npm run build
 
 # Start Factorio with RCON enabled (port 27015, password test123)
-# GitHub Copilot can now use the Factorio MCP server in this workspace
+# Reload VS Code window (Ctrl+Shift+P → "Reload Window")
+# GitHub Copilot can now use the factorio MCP server tools
 ```
 
-GitHub Copilot will automatically connect to the MCP server when you interact with it in this workspace.
+The MCP server provides two tools:
+- `execute_command` - Execute RCON commands
+- `get_game_info` - Get server information
 
 #### With Other MCP Clients
 
