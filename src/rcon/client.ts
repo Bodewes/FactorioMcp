@@ -1,3 +1,4 @@
+// @ts-ignore - rcon-srcds doesn't have TypeScript declarations
 import { Rcon } from 'rcon-srcds';
 import { Logger } from '../utils/logger';
 import { ConnectionError, CommandError } from '../utils/errors';

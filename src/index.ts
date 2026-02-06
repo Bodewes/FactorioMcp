@@ -23,10 +23,15 @@ async function main(): Promise<void> {
     );
 
     // Initialize MCP Server
-    const server = new Server({
-      name: config.mcp.serverName,
-      version: '0.1.0',
-    });
+    const server = new Server(
+      {
+        name: config.mcp.serverName,
+        version: '0.1.0',
+      },
+      {
+        capabilities: {},
+      }
+    );
 
     // Register tool handlers
     server.setRequestHandler(ListToolsRequestSchema, async () => {
