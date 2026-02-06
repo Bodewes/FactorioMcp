@@ -69,6 +69,53 @@ async function main(): Promise<void> {
               properties: {},
             },
           },
+          {
+            name: 'run_lua',
+            description: 'Execute Lua code in the Factorio environment',
+            inputSchema: {
+              type: 'object' as const,
+              properties: {
+                code: {
+                  type: 'string',
+                  description: 'Lua code to execute',
+                },
+                print_result: {
+                  type: 'boolean',
+                  description: 'Whether to return the result via rcon.print (default: true)',
+                },
+              },
+              required: ['code'],
+            },
+          },
+          {
+            name: 'get_evolution',
+            description: 'Get current evolution factor and enemy statistics',
+            inputSchema: {
+              type: 'object' as const,
+              properties: {},
+            },
+          },
+          {
+            name: 'get_research',
+            description: 'Get current and queued research progress',
+            inputSchema: {
+              type: 'object' as const,
+              properties: {},
+            },
+          },
+          {
+            name: 'get_production',
+            description: 'Get production statistics for the factory',
+            inputSchema: {
+              type: 'object' as const,
+              properties: {
+                item: {
+                  type: 'string',
+                  description: 'Optional: specific item to get stats for (e.g., "iron-plate")',
+                },
+              },
+            },
+          },
         ],
       };
     });
@@ -175,6 +222,142 @@ async function main(): Promise<void> {
               {
                 type: 'text',
                 text: `Error getting players: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'run_lua') {
+        try {
+          const code = String(request.params.arguments?.code || '');
+          const printResult = request.params.arguments?.print_result !== false;
+
+          if (!code) {
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: 'Error: Lua code is required',
+                },
+              ],
+            };
+          }
+
+          // Wrap code with rcon.print if requested
+          let luaCommand = code;
+          if (printResult && !code.includes('rcon.print')) {
+            luaCommand = `rcon.print(tostring(${code}))`;
+          }
+
+          const result = await rconClient.execute(`/c ${luaCommand}`);
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: result || '(no output)',
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Lua execution failed', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error executing Lua: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'get_evolution') {
+        try {
+          const evolution = await rconClient.execute('/c rcon.print(game.forces["enemy"].evolution_factor)');
+          const killCount = await rconClient.execute('/c rcon.print(game.forces["enemy"].kill_count_statistics.get_input_count("character"))');
+          
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Evolution:\n- Factor: ${evolution}\n- Player kills: ${killCount}`,
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Failed to get evolution', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error getting evolution: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'get_research') {
+        try {
+          const currentResearch = await rconClient.execute('/c local r = game.forces["player"].current_research; rcon.print(r and r.name or "none")');
+          const progress = await rconClient.execute('/c rcon.print(game.forces["player"].research_progress)');
+          
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Research:\n- Current: ${currentResearch}\n- Progress: ${progress}`,
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Failed to get research', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error getting research: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'get_production') {
+        try {
+          const item = String(request.params.arguments?.item || 'iron-plate');
+          const production = await rconClient.execute(
+            `/c local stats = game.forces["player"].item_production_statistics; ` +
+            `local input = stats.get_input_count("${item}"); ` +
+            `local output = stats.get_output_count("${item}"); ` +
+            `rcon.print("Produced: " .. output .. ", Consumed: " .. input)`
+          );
+          
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Production stats for '${item}':\n${production}`,
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Failed to get production', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error getting production: ${error instanceof Error ? error.message : 'Unknown error'}`,
               },
             ],
           };

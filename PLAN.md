@@ -118,19 +118,19 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 - [x] Request/response handling
 - [x] Logging setup (Pino to stderr)
 
-### Phase 4: Core Tools 🔄 IN PROGRESS
+### Phase 4: Core Tools ✅ COMPLETED
 - [x] `execute_command` tool
 - [x] `get_game_info` tool
-- [ ] `get_players` tool ← NEXT
+- [x] `get_players` tool
 - [x] Parameter validation (Zod schemas)
 - [x] Tool testing
 
-### Phase 5: Advanced Tools (Week 3-4)
-- [ ] `run_lua` tool
-- [ ] `get_evolution` tool
-- [ ] `get_research` tool
-- [ ] `get_production` tool
-- [ ] Complex Lua integrations
+### Phase 5: Advanced Tools ✅ COMPLETED
+- [x] `run_lua` tool
+- [x] `get_evolution` tool
+- [x] `get_research` tool
+- [x] `get_production` tool
+- [x] Complex Lua integrations
 
 ### Phase 6: Testing & Refinement (Week 4)
 - [ ] Unit tests
