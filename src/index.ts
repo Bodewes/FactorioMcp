@@ -70,10 +70,19 @@ async function main(): Promise<void> {
       }
 
       try {
-        // Connect to RCON if not already connected
-        if (!rconClient['socket'] || rconClient['socket'].destroyed) {
-          logger.debug('Connecting to RCON server');
-          await rconClient.connect();
+        // Connect to RCON only if the tool requires it
+        const requiresRcon = tool.definition.requiresRcon !== false; // Default to true
+        
+        if (requiresRcon) {
+          // Connect to RCON if not already connected
+          if (!rconClient['socket'] || rconClient['socket'].destroyed) {
+            logger.debug('Connecting to RCON server');
+            try {
+              await rconClient.connect();
+            } catch (error) {
+              throw new Error(`Failed to connect to Factorio server: ${error instanceof Error ? error.message : 'Unknown error'}. Make sure the server is running.`);
+            }
+          }
         }
 
         // Execute the tool handler

@@ -3,6 +3,7 @@ import { FactorioRconClient } from '../rcon/client.js';
 export interface ToolDefinition {
   name: string;
   description: string;
+  requiresRcon?: boolean; // Tools that need RCON connection (default: true)
   inputSchema: {
     type: 'object';
     properties: Record<string, unknown>;

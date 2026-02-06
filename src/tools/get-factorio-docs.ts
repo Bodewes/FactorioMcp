@@ -134,6 +134,7 @@ export const getFactorioDocsTool: FactorioTool = {
   definition: {
     name: 'get_factorio_docs',
     description: 'Fetch Factorio documentation from the Lua API docs or wiki. Use this to look up Factorio APIs, game concepts, or modding tutorials. Examples: "LuaFlowStatistics", "defines", "Tutorial:Modding_tutorial" (with source="wiki")',
+    requiresRcon: false,
     inputSchema: inputSchema,
   },
   handler,
