@@ -32,7 +32,7 @@ export class FactorioRconClient {
         timeout: this.timeout,
       });
 
-      await this.rcon.connect();
+      await this.rcon.authenticate();
       this.logger.info('Connected to RCON server');
     } catch (error) {
       this.logger.error('Failed to connect to RCON server', {
@@ -69,7 +69,7 @@ export class FactorioRconClient {
 
     try {
       this.logger.debug('Executing command', { command });
-      const response = await this.rcon.send(command);
+      const response = await this.rcon.execute(command);
       this.logger.debug('Command executed successfully', { command, response });
       return response;
     } catch (error) {
