@@ -8,7 +8,7 @@ declare module 'rcon-srcds' {
 
   export default class Rcon {
     constructor(options: RconOptions);
-    authenticate(): Promise<void>;
+    authenticate(password: string): Promise<void>;
     disconnect(): Promise<void>;
     execute(command: string): Promise<string>;
   }
