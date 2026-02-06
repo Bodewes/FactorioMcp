@@ -1,6 +1,5 @@
 // @ts-ignore - rcon-srcds doesn't have TypeScript declarations
-import pkg from 'rcon-srcds';
-const { Rcon } = pkg;
+import Rcon from 'rcon-srcds';
 import { Logger } from '../utils/logger.js';
 import { ConnectionError, CommandError } from '../utils/errors.js';
 
