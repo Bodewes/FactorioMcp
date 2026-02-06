@@ -28,8 +28,10 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 
 ### Key Dependencies
 - `@modelcontextprotocol/sdk`: MCP protocol implementation
-- `rcon-srcds`: RCON client for Source engine (compatible with Factorio)
+- Custom RCON implementation: Based on factorio-rcon-py protocol
 - `zod`: Schema validation for tool parameters
+- `axios`: HTTP client for documentation fetching
+- `pino`: Structured logging to stderr
 
 ### Development Tools
 - ESLint & Prettier: Code quality
@@ -87,6 +89,7 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 - `run_lua`: Custom Lua code execution
 - `get_research`: Research progress
 - `get_production`: Production statistics
+- `get_factorio_docs`: Offline documentation lookup (Lua API & Wiki)
 
 #### 4. Command Queue (optional)
 - Rate limiting
@@ -131,6 +134,11 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 - [x] `get_research` tool
 - [x] `get_production` tool
 - [x] Complex Lua integrations
+- [x] Modular tool structure (separate files per tool)
+- [x] `get_factorio_docs` tool (offline documentation lookup)
+- [x] Offline mode support (requiresRcon flag)
+- [x] Error detection for Factorio Lua errors
+- [x] Factorio 2.0 API compatibility
 
 ### Phase 6: Testing & Refinement (Week 4)
 - [ ] Unit tests
@@ -159,16 +167,19 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 factorio-mcp/
 ├── src/
 │   ├── index.ts                 # Entry point & MCP server setup
-│   ├── rcon/
-│   │   ├── client.ts           # RCON client implementation
-│   │   ├── connection.ts       # Connection management
+│   ├── rcon/ (custom protocol)
 │   │   └── types.ts            # RCON types
 │   ├── tools/
-│   │   ├── index.ts            # Tool registration
+│   │   ├── index.ts            # Tool registration & exports
+│   │   ├── types.ts            # Tool type definitions
 │   │   ├── execute-command.ts  # Command execution tool
-│   │   ├── game-info.ts        # Game info tool
-│   │   ├── players.ts          # Players tool
-│   │   ├── lua.ts              # Lua execution tool
+│   │   ├── get-game-info.ts    # Game info tool
+│   │   ├── get-players.ts      # Players tool
+│   │   ├── run-lua.ts          # Lua execution tool
+│   │   ├── get-evolution.ts    # Evolution factor tool
+│   │   ├── get-research.ts     # Research progress tool
+│   │   ├── get-production.ts   # Production statistics tool
+│   │   └── get-factorio-docs.ts # Documentation lookup tool (offline)
 │   │   └── schemas.ts          # Zod validation schemas
 │   ├── utils/
 │   │   ├── logger.ts           # Logging utility
@@ -266,7 +277,32 @@ LOG_LEVEL=info
         default: true
       }
     },
-    required: ["code"]
+   
+
+### Tool: get_factorio_docs
+```typescript
+{
+  name: "get_factorio_docs",
+  description: "Fetch Factorio documentation from Lua API or Wiki",
+  inputSchema: {
+    type: "object",
+    properties: {
+      topic: {
+        type: "string",
+        description: "Class, concept, event, or wiki page name"
+      },
+      source: {
+        type: "string",
+        enum: ["api", "wiki"],
+        description: "Source to search (default: api)"
+      }
+    },
+    required: ["topic"]
+  }
+}
+```
+
+**Note**: This tool works offline and doesn't require a Factorio server connection. required: ["code"]
   }
 }
 ```
@@ -298,11 +334,16 @@ LOG_LEVEL=info
 - Performance under load
 - Error recovery scenarios
 
-## Performance Considerations
-
-1. **Connection Pooling**: For high request volumes
-2. **Caching**: For frequently accessed data
-3. **Async Operations**: Non-blocking command execution
+## Performance Considerations (8 tools total)
+- ✅ Modular, maintainable code structure
+- ✅ Offline mode support for non-RCON tools
+- ✅ Documentation lookup capability (Lua API & Wiki)
+- ✅ Error detection and handling
+- ✅ Factorio 2.0 compatibility
+- [ ] Comprehensive test coverage (>80%)
+- [ ] Production-ready error handling
+- [ ] Complete API documentation
+- [ ]**Async Operations**: Non-blocking command execution
 4. **Timeout Management**: Prevent long hangs
 5. **Memory Management**: Resource cleanup
 
@@ -354,9 +395,31 @@ LOG_LEVEL=info
 7. **AI Assistant Tools**: Specialized tools for AI-driven gameplay
 
 ## Resources & References
+## Recent Updates
 
-### Documentation
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)
+### February 6, 2026 - Documentation & Offline Mode
+- ✅ Added `get_factorio_docs` tool for offline documentation lookup
+  - Supports Lua API documentation (stable version)
+  - Supports Factorio Wiki pages
+  - Works without Factorio server connection
+- ✅ Implemented offline mode support
+  - Added `requiresRcon` flag to tool definitions
+  - MCP server remains functional when Factorio is offline
+  - Better error messages for connection failures
+- ✅ Completed modular refactoring
+  - Reduced main index.ts from 394 to 134 lines (66% reduction)
+  - Each tool in separate file with clear responsibilities
+  - Improved maintainability and testability
+- ✅ Enhanced error handling
+  - Detects Factorio Lua errors in RCON responses
+  - Graceful fallbacks for unavailable APIs
+- ✅ Factorio 2.0 API compatibility
+  - Updated for Factorio 2.0.67+
+  - Fixed production statistics API (get_item_production_statistics method)
+
+---
+
+*Document version: 1.1ication](https://modelcontextprotocol.io/)
 - [Factorio Console Commands](https://wiki.factorio.com/Console)
 - [RCON Protocol](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol)
 - [Factorio Lua API](https://lua-api.factorio.com/)
