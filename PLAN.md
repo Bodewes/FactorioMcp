@@ -95,35 +95,35 @@ A Model Context Protocol (MCP) server that enables communication between AI assi
 
 ## Development Phases
 
-### Phase 1: Project Setup & Basic Infrastructure (Week 1)
+### Phase 1: Project Setup & Basic Infrastructure ✅ COMPLETED
 - [x] Project initialization
-- [ ] TypeScript configuration
-- [ ] Package.json setup
-- [ ] Basic project structure
-- [ ] Git repository setup
-- [ ] README & documentation setup
+- [x] TypeScript configuration
+- [x] Package.json setup
+- [x] Basic project structure
+- [x] Git repository setup
+- [x] README & documentation setup
 
-### Phase 2: RCON Client (Week 1-2)
-- [ ] RCON connection implementation
-- [ ] Authentication flow
-- [ ] Basic command execution
-- [ ] Error handling
-- [ ] Connection tests
-- [ ] Reconnection logic
+### Phase 2: RCON Client ✅ COMPLETED
+- [x] RCON connection implementation (custom protocol based on factorio-rcon-py)
+- [x] Authentication flow
+- [x] Basic command execution
+- [x] Error handling
+- [x] Connection tests
+- [x] Reconnection logic
 
-### Phase 3: MCP Server Basics (Week 2)
-- [ ] MCP SDK integration
-- [ ] Server setup & configuration
-- [ ] Basic tool registration
-- [ ] Request/response handling
-- [ ] Logging setup
+### Phase 3: MCP Server Basics ✅ COMPLETED
+- [x] MCP SDK integration
+- [x] Server setup & configuration
+- [x] Basic tool registration
+- [x] Request/response handling
+- [x] Logging setup (Pino to stderr)
 
-### Phase 4: Core Tools (Week 2-3)
-- [ ] `execute_command` tool
-- [ ] `get_game_info` tool
-- [ ] `get_players` tool
-- [ ] Parameter validation (Zod schemas)
-- [ ] Tool testing
+### Phase 4: Core Tools 🔄 IN PROGRESS
+- [x] `execute_command` tool
+- [x] `get_game_info` tool
+- [ ] `get_players` tool ← NEXT
+- [x] Parameter validation (Zod schemas)
+- [x] Tool testing
 
 ### Phase 5: Advanced Tools (Week 3-4)
 - [ ] `run_lua` tool

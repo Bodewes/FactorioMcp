@@ -61,6 +61,14 @@ async function main(): Promise<void> {
               properties: {},
             },
           },
+          {
+            name: 'get_players',
+            description: 'Get list of online players and their status',
+            inputSchema: {
+              type: 'object' as const,
+              properties: {},
+            },
+          },
         ],
       };
     });
@@ -101,6 +109,72 @@ async function main(): Promise<void> {
               {
                 type: 'text',
                 text: `Error executing command: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'get_game_info') {
+        try {
+          // Get game info using multiple commands
+          const tick = await rconClient.execute('/c rcon.print(game.tick)');
+          const speed = await rconClient.execute('/c rcon.print(game.speed)');
+          const players = await rconClient.execute('/players count');
+          
+          const info = {
+            tick: tick || 'Unknown',
+            speed: speed || 'Unknown',
+            players: players || 'Unknown',
+          };
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Game Info:\n- Tick: ${info.tick}\n- Speed: ${info.speed}\n- Players: ${info.players}`,
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Failed to get game info', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error getting game info: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              },
+            ],
+          };
+        }
+      }
+
+      if (request.params.name === 'get_players') {
+        try {
+          // Get detailed player information
+          const playersList = await rconClient.execute('/players');
+          const playerCount = await rconClient.execute('/c rcon.print(#game.players)');
+          const connectedCount = await rconClient.execute('/c rcon.print(#game.connected_players)');
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Players:\n- Total: ${playerCount}\n- Connected: ${connectedCount}\n\n${playersList}`,
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error('Failed to get players', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          });
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error getting players: ${error instanceof Error ? error.message : 'Unknown error'}`,
               },
             ],
           };
