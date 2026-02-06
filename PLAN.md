@@ -1,44 +1,44 @@
-# Factorio MCP Server - Plan van Aanpak
+# Factorio MCP Server - Plan of Action
 
 ## Project Overview
-Een Model Context Protocol (MCP) server die communicatie mogelijk maakt tussen AI assistenten (zoals Claude) en het Factorio spel via de Factorio RCON (Remote Console) protocol.
+A Model Context Protocol (MCP) server that enables communication between AI assistants (like Claude) and the Factorio game via the Factorio RCON (Remote Console) protocol.
 
-## Doelstellingen
+## Objectives
 
-### Primaire Doelen
-1. **RCON Communicatie**: Stabiele verbinding met Factorio via RCON protocol
-2. **MCP Server Implementatie**: Volledige MCP server die tools exposed voor Factorio interactie
-3. **Command Execution**: Mogelijkheid om Factorio console commands uit te voeren
-4. **Game State Monitoring**: Informatie ophalen over de huidige game state
-5. **Extensibiliteit**: Modulair ontwerp voor toekomstige uitbreidingen
+### Primary Goals
+1. **RCON Communication**: Stable connection with Factorio via RCON protocol
+2. **MCP Server Implementation**: Complete MCP server exposing tools for Factorio interaction
+3. **Command Execution**: Ability to execute Factorio console commands
+4. **Game State Monitoring**: Retrieve information about the current game state
+5. **Extensibility**: Modular design for future enhancements
 
-### Secundaire Doelen
-- Lua script integratie voor complexere operaties
+### Secondary Goals
+- Lua script integration for complex operations
 - Real-time event monitoring
-- Factory statistics en metrics
+- Factory statistics and metrics
 - Blueprint management
-- Mod integratie
+- Mod integration
 
-## Technische Stack
+## Technical Stack
 
-### Taal & Runtime
-- **TypeScript**: Voor type-safety en moderne JavaScript features
+### Language & Runtime
+- **TypeScript**: For type-safety and modern JavaScript features
 - **Node.js**: Runtime environment
-- **Bun/npm**: Package management
+- **npm/bun**: Package management
 
-### Belangrijkste Dependencies
-- `@modelcontextprotocol/sdk`: MCP protocol implementatie
-- `rcon-srcds`: RCON client voor Source engine (compatibel met Factorio)
-- `zod`: Schema validatie voor tool parameters
+### Key Dependencies
+- `@modelcontextprotocol/sdk`: MCP protocol implementation
+- `rcon-srcds`: RCON client for Source engine (compatible with Factorio)
+- `zod`: Schema validation for tool parameters
 
 ### Development Tools
 - ESLint & Prettier: Code quality
 - TypeScript compiler: Type checking
 - Vitest/Jest: Testing framework
 
-## Architectuur
+## Architecture
 
-### Component Overzicht
+### Component Overview
 ```
 ┌─────────────────────┐
 │   AI Assistant      │
@@ -67,11 +67,11 @@ Een Model Context Protocol (MCP) server die communicatie mogelijk maakt tussen A
 ### Core Modules
 
 #### 1. RCON Manager
-- Connectie beheer met Factorio server
+- Connection management with Factorio server
 - Authentication
 - Reconnection logic
 - Error handling
-- Connection pooling (indien nodig)
+- Connection pooling (if needed)
 
 #### 2. MCP Server
 - Tool registration
@@ -80,80 +80,80 @@ Een Model Context Protocol (MCP) server die communicatie mogelijk maakt tussen A
 - Error propagation
 
 #### 3. Tool Implementations
-- `execute_command`: Directe console commands
+- `execute_command`: Direct console commands
 - `get_game_info`: Server info & statistics
-- `get_players`: Online spelers lijst
+- `get_players`: Online players list
 - `get_evolution`: Evolution factor
 - `run_lua`: Custom Lua code execution
 - `get_research`: Research progress
 - `get_production`: Production statistics
 
-#### 4. Command Queue (optioneel)
+#### 4. Command Queue (optional)
 - Rate limiting
 - Command prioritization
 - Batch operations
 
-## Development Fases
+## Development Phases
 
-### Fase 1: Project Setup & Basic Infrastructure (Week 1)
-- [x] Project initialisatie
-- [ ] TypeScript configuratie
+### Phase 1: Project Setup & Basic Infrastructure (Week 1)
+- [x] Project initialization
+- [ ] TypeScript configuration
 - [ ] Package.json setup
-- [ ] Basic project structuur
+- [ ] Basic project structure
 - [ ] Git repository setup
-- [ ] README & documentatie opzet
+- [ ] README & documentation setup
 
-### Fase 2: RCON Client (Week 1-2)
-- [ ] RCON connection implementatie
+### Phase 2: RCON Client (Week 1-2)
+- [ ] RCON connection implementation
 - [ ] Authentication flow
 - [ ] Basic command execution
 - [ ] Error handling
 - [ ] Connection tests
 - [ ] Reconnection logic
 
-### Fase 3: MCP Server Basis (Week 2)
-- [ ] MCP SDK integratie
-- [ ] Server setup & configuratie
+### Phase 3: MCP Server Basics (Week 2)
+- [ ] MCP SDK integration
+- [ ] Server setup & configuration
 - [ ] Basic tool registration
 - [ ] Request/response handling
 - [ ] Logging setup
 
-### Fase 4: Core Tools (Week 2-3)
+### Phase 4: Core Tools (Week 2-3)
 - [ ] `execute_command` tool
 - [ ] `get_game_info` tool
 - [ ] `get_players` tool
-- [ ] Parameter validatie (Zod schemas)
+- [ ] Parameter validation (Zod schemas)
 - [ ] Tool testing
 
-### Fase 5: Advanced Tools (Week 3-4)
+### Phase 5: Advanced Tools (Week 3-4)
 - [ ] `run_lua` tool
 - [ ] `get_evolution` tool
 - [ ] `get_research` tool
 - [ ] `get_production` tool
-- [ ] Complexere Lua integraties
+- [ ] Complex Lua integrations
 
-### Fase 6: Testing & Refinement (Week 4)
+### Phase 6: Testing & Refinement (Week 4)
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] End-to-end tests
 - [ ] Performance testing
 - [ ] Error scenario testing
 
-### Fase 7: Documentation & Examples (Week 5)
-- [ ] API documentatie
+### Phase 7: Documentation & Examples (Week 5)
+- [ ] API documentation
 - [ ] Usage examples
 - [ ] Configuration guide
 - [ ] Troubleshooting guide
 - [ ] Contributing guidelines
 
-### Fase 8: Publishing & Distribution (Week 5-6)
+### Phase 8: Publishing & Distribution (Week 5-6)
 - [ ] npm package setup
 - [ ] Version tagging
 - [ ] Release notes
 - [ ] GitHub releases
 - [ ] Community outreach
 
-## Project Structuur
+## Project Structure
 
 ```
 factorio-mcp/
@@ -199,7 +199,7 @@ factorio-mcp/
 └── LICENSE
 ```
 
-## Configuratie
+## Configuration
 
 ### Environment Variables
 ```
@@ -216,7 +216,7 @@ LOG_LEVEL=info
 3. Configure RCON port (default: 27015)
 4. Ensure firewall allows connections
 
-## MCP Tools Specificatie
+## MCP Tools Specification
 
 ### Tool: execute_command
 ```typescript
@@ -271,13 +271,13 @@ LOG_LEVEL=info
 }
 ```
 
-## Security Overwegingen
+## Security Considerations
 
-1. **RCON Password**: Veilig opslaan via environment variables
-2. **Command Validation**: Valideren van gevaarlijke commands
-3. **Rate Limiting**: Voorkomen van spam/abuse
-4. **Lua Sandboxing**: Beperken van Lua capabilities (indien mogelijk)
-5. **Network Security**: TLS/SSL voor productie (indien beschikbaar)
+1. **RCON Password**: Safe storage via environment variables
+2. **Command Validation**: Validate dangerous commands
+3. **Rate Limiting**: Prevent spam/abuse
+4. **Lua Sandboxing**: Restrict Lua capabilities (if possible)
+5. **Network Security**: TLS/SSL for production (if available)
 
 ## Testing Strategy
 
@@ -298,38 +298,38 @@ LOG_LEVEL=info
 - Performance under load
 - Error recovery scenarios
 
-## Performance Overwegingen
+## Performance Considerations
 
-1. **Connection Pooling**: Bij hoge request volumes
-2. **Caching**: Voor frequently accessed data
+1. **Connection Pooling**: For high request volumes
+2. **Caching**: For frequently accessed data
 3. **Async Operations**: Non-blocking command execution
-4. **Timeout Management**: Voorkomen van lange hangs
-5. **Memory Management**: Cleanup van resources
+4. **Timeout Management**: Prevent long hangs
+5. **Memory Management**: Resource cleanup
 
-## Risico's & Mitigaties
+## Risks & Mitigations
 
-| Risico | Waarschijnlijkheid | Impact | Mitigatie |
-|--------|-------------------|--------|-----------|
-| RCON protocol wijzigingen | Laag | Hoog | Version pinning, compatibility tests |
-| Factorio crashes | Middel | Middel | Graceful error handling, reconnection |
-| Performance problemen | Middel | Middel | Profiling, optimization, rate limiting |
-| Security vulnerabilities | Laag | Hoog | Security audit, input validation |
-| Network instability | Middel | Laag | Retry logic, timeouts |
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|-----------|----------|
+| RCON protocol changes | Low | High | Version pinning, compatibility tests |
+| Factorio crashes | Medium | Medium | Graceful error handling, reconnection |
+| Performance issues | Medium | Medium | Profiling, optimization, rate limiting |
+| Security vulnerabilities | Low | High | Security audit, input validation |
+| Network instability | Medium | Low | Retry logic, timeouts |
 
 ## Success Criteria
 
 ### Minimum Viable Product (MVP)
-- ✅ RCON connectie werkt stabiel
-- ✅ Basis commands kunnen uitgevoerd worden
-- ✅ MCP protocol correct geïmplementeerd
-- ✅ Minimaal 3 werkende tools
-- ✅ Documentatie voor basic usage
+- ✅ RCON connection works stably
+- ✅ Basic commands can be executed
+- ✅ MCP protocol correctly implemented
+- ✅ Minimum 3 working tools
+- ✅ Documentation for basic usage
 
 ### Complete v1.0
-- ✅ Alle geplande tools geïmplementeerd
+- ✅ All planned tools implemented
 - ✅ Comprehensive test coverage (>80%)
 - ✅ Production-ready error handling
-- ✅ Complete documentatie
+- ✅ Complete documentation
 - ✅ Published to npm
 
 ## Future Enhancements (Post v1.0)
@@ -342,15 +342,15 @@ LOG_LEVEL=info
 6. **GraphQL API**: Alternative to RCON for complex queries
 7. **AI Assistant Tools**: Specialized tools for AI-driven gameplay
 
-## Resources & Referenties
+## Resources & References
 
-### Documentatie
+### Documentation
 - [MCP Protocol Specification](https://modelcontextprotocol.io/)
 - [Factorio Console Commands](https://wiki.factorio.com/Console)
 - [RCON Protocol](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol)
 - [Factorio Lua API](https://lua-api.factorio.com/)
 
-### Vergelijkbare Projecten
+### Similar Projects
 - factorio-server-manager
 - factorio-rcon-py
 - Source RCON libraries
@@ -369,13 +369,13 @@ LOG_LEVEL=info
 - **Week 5**: Documentation & Polish
 - **Week 6**: Release & Community
 
-**Target Release Date**: 6 weken vanaf start
+**Target Release Date**: 6 weeks from start
 
 ## Contact & Maintainers
 
-TBD - Project lead identificeren
+TBD - Project lead to be identified
 
 ---
 
-*Document versie: 1.0*  
-*Laatst bijgewerkt: 6 februari 2026*
+*Document version: 1.0*  
+*Last updated: February 6, 2026*

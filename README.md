@@ -4,17 +4,17 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-1.0-green.svg)](https://modelcontextprotocol.io/)
 
-Een Model Context Protocol (MCP) server die AI assistenten zoals Claude in staat stelt om te communiceren met Factorio servers via het RCON protocol.
+A Model Context Protocol (MCP) server that enables AI assistants like Claude to communicate with Factorio servers via the RCON protocol.
 
-## 🎮 Wat is dit?
+## 🎮 What is this?
 
-Deze MCP server maakt het mogelijk voor AI assistenten om:
-- Console commands uit te voeren in Factorio
-- Game informatie en statistieken op te halen
-- Lua code uit te voeren voor complexe operaties
-- Speler informatie te monitoren
-- Research progress te bekijken
-- Production statistics te analyseren
+This MCP server enables AI assistants to:
+- Execute console commands in Factorio
+- Retrieve game information and statistics
+- Execute Lua code for complex operations
+- Monitor player information
+- View research progress
+- Analyze production statistics
 
 ## ✨ Features
 
@@ -25,7 +25,7 @@ Deze MCP server maakt het mogelijk voor AI assistenten om:
 - 🧪 **Type-Safe**: Volledig gebouwd met TypeScript
 - 🔄 **Auto-Reconnect**: Automatisch herstel bij verbindingsproblemen
 
-## 📋 Vereisten
+## 📋 Requirements
 
 - Node.js 18.0 of hoger
 - Een draaiende Factorio server met RCON enabled
@@ -47,8 +47,8 @@ bun add factorio-mcp
 
 ### Factorio Server Setup
 
-1. Open je Factorio `server-settings.json`
-2. Enable RCON en stel een wachtwoord in:
+1. Open your Factorio `server-settings.json`
+2. Enable RCON and set a password:
 
 ```json
 {
@@ -57,11 +57,11 @@ bun add factorio-mcp
 }
 ```
 
-3. Herstart de Factorio server
+3. Restart the Factorio server
 
-### MCP Server Configuratie
+### MCP Server Configuration
 
-Creëer een `.env` bestand:
+Create an `.env` file:
 
 ```env
 FACTORIO_RCON_HOST=localhost
@@ -71,9 +71,9 @@ MCP_SERVER_NAME=factorio-mcp
 LOG_LEVEL=info
 ```
 
-## 🎯 Gebruik
+## 🎯 Usage
 
-### Als Standalone Server
+### As Standalone Server
 
 ```bash
 npx factorio-mcp
@@ -81,7 +81,7 @@ npx factorio-mcp
 
 ### In Claude Desktop
 
-Voeg toe aan je `claude_desktop_config.json`:
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
@@ -99,7 +99,7 @@ Voeg toe aan je `claude_desktop_config.json`:
 }
 ```
 
-### Programmatisch
+### Programmatically
 
 ```typescript
 import { FactorioMCPServer } from 'factorio-mcp';
@@ -115,10 +115,10 @@ const server = new FactorioMCPServer({
 await server.start();
 ```
 
-## 🔧 Beschikbare Tools
+## 🔧 Available Tools
 
 ### `execute_command`
-Voer een Factorio console command uit.
+Execute a Factorio console command.
 
 ```typescript
 // Voorbeeld gebruik via AI assistant:
@@ -126,54 +126,54 @@ Voer een Factorio console command uit.
 ```
 
 ### `get_game_info`
-Krijg algemene informatie over de game.
+Get general information about the game.
 
 ```typescript
 // "Get the current game information"
 ```
 
 ### `get_players`
-Lijst alle online spelers.
+List all online players.
 
 ```typescript
 // "Show me all online players"
 ```
 
 ### `run_lua`
-Voer custom Lua code uit in de Factorio environment.
+Execute custom Lua code in the Factorio environment.
 
 ```typescript
 // "Run Lua code to check the evolution factor"
 ```
 
 ### `get_evolution`
-Krijg de huidige evolution factor.
+Get the current evolution factor.
 
 ```typescript
 // "What is the current evolution factor?"
 ```
 
 ### `get_research`
-Bekijk de huidige research progress.
+View current research progress.
 
 ```typescript
 // "Show current research progress"
 ```
 
 ### `get_production`
-Analyseer production statistics.
+Analyze production statistics.
 
 ```typescript
 // "Get production statistics for the last hour"
 ```
 
-## 📚 Voorbeelden
+## 📚 Examples
 
-### Basis Command Execution
+### Basic Command Execution
 
 ```
 User: "What's the current game time in the Factorio server?"
-AI: Gebruikt execute_command met /time
+AI: Uses execute_command with /time
 Response: "The game time is 14:23:45"
 ```
 
@@ -181,7 +181,7 @@ Response: "The game time is 14:23:45"
 
 ```
 User: "Check how many iron plates are in storage"
-AI: Gebruikt run_lua met custom script
+AI: Uses run_lua with custom script
 Response: "There are 15,420 iron plates in storage"
 ```
 
@@ -189,7 +189,7 @@ Response: "There are 15,420 iron plates in storage"
 
 ```
 User: "Analyze my iron production in the last hour"
-AI: Gebruikt get_production
+AI: Uses get_production
 Response: "Iron production: 2,450 plates/hour..."
 ```
 
@@ -245,23 +245,23 @@ npm run lint
 
 ## 🤝 Contributing
 
-Contributions zijn welkom! Zie [CONTRIBUTING.md](CONTRIBUTING.md) voor details.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-1. Fork het project
-2. Creëer een feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit je changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push naar de branch (`git push origin feature/AmazingFeature`)
-5. Open een Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📝 Licentie
+## 📝 License
 
-Dit project is gelicenseerd onder de MIT License - zie het [LICENSE](LICENSE) bestand voor details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- [Model Context Protocol](https://modelcontextprotocol.io/) - Voor het MCP framework
-- [Factorio](https://factorio.com/) - Voor de geweldige game
-- De Factorio community - Voor documentatie en support
+- [Model Context Protocol](https://modelcontextprotocol.io/) - For the MCP framework
+- [Factorio](https://factorio.com/) - For the amazing game
+- The Factorio community - For documentation and support
 
 ## 📞 Support
 
@@ -281,7 +281,7 @@ Dit project is gelicenseerd onder de MIT License - zie het [LICENSE](LICENSE) be
 
 ## ⚠️ Disclaimer
 
-Dit is een community project en is niet geaffilieerd met Wube Software (makers van Factorio).
+This is a community project and is not affiliated with Wube Software (creators of Factorio).
 
 ---
 
