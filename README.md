@@ -75,17 +75,25 @@ LOG_LEVEL=info
 
 ### Development (Local Testing)
 
-For local development and testing, this project includes a `mcp.json` configuration:
+This project includes MCP server configurations for different clients:
+
+#### In VS Code with GitHub Copilot
+
+The `.vscode/settings.json` is already configured! Just:
 
 ```bash
-# Build the project first
+# Build the project
 npm run build
 
-# The mcp.json is ready to use with MCP clients
-# It references the built dist/index.js file
+# Start Factorio with RCON enabled (port 27015, password test123)
+# GitHub Copilot can now use the Factorio MCP server in this workspace
 ```
 
-Your MCP client can now use the configuration from `mcp.json` to connect to this server.
+GitHub Copilot will automatically connect to the MCP server when you interact with it in this workspace.
+
+#### With Other MCP Clients
+
+Use the `mcp.json` configuration file in the project root.
 
 ### As Standalone Server
 
